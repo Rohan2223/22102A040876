@@ -1,37 +1,29 @@
-import React, { useState, useEffect } from "react";
-function GoodList() {
-   const [goods, setGoods] = useState([]);
+import React, { useEffect, useState } from 'react';
+import GoodList from './GoodList';
+
+const App = () => {
+  const [stocks, setStocks] = useState([]);
+
+  const fetchStocks = async () => {
+    try {
+      const res = await fetch('/api/evaluvation-service/stock/NVDA');
+      const data = await res.json();
+      setStocks([data]); // Assuming the API returns a single stock object
+    } catch (err) {
+      console.error("Error fetching stocks:", err);
+    }
+  };
+
   useEffect(() => {
-    const data = [
-      { id: 1, name: "Apple", price: 1.2 },
-      { id: 2, name: "Banana", price: 0.8 },
-      { id: 3, name: "Orange", price: 1.5 },
-    ];
-    setGoods(data);
+    fetchStocks();
   }, []);
 
   return (
-    <div style={{ textAlign: "center" }}>
-      <h2>Goods Price List</h2>
-      <table style={{ margin: "auto", borderCollapse: "collapse" }}>
-        <thead>
-          <tr>
-            <th style={{ border: "1px solid black", padding: "8px" }}>Name</th>
-            <th style={{ border: "1px solid black", padding: "8px" }}>Price ($)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {goods.map((item) => (
-            <tr key={item.id}>
-              <td style={{ border: "1px solid black", padding: "8px" }}>{item.name}</td>
-              <td style={{ border: "1px solid black", padding: "8px" }}>{item.price.toFixed(2)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Stock Market</h1>
+      <GoodList stocks={stocks} />
     </div>
   );
+};
 
-}
-
-export default GoodList
+export default App;
